@@ -301,8 +301,48 @@ def f(str1,pattern):
         
     return False
 
-str1='abcdefhhshdii'
-pattern='fhhs'
-print(f(str1,pattern))
+# str1='abcdefhhshdii'
+# pattern='fhhs'
+# print(f(str1,pattern))
 
-    
+
+# double /hashing in Rabin karp(the actual algo)
+class rabin_karp_doub:
+    def hash_creation(radix1,radix2,m,str1,mod1,mod2):
+        hashh=0
+        hashh2=0
+        factor=1
+        f2=1
+        for i in range(m-1,-1,-1):
+            hashh+=((ord(str1[i])-ord('a'))*factor)%mod1
+            hashh2+=((ord(str1[i])-ord('a'))*f2)%mod2
+            factor*=radix1
+            f2*=radix2 
+        return hashh%mod1, hashh2%mod2
+def f_double_hash(str1,pattern):
+    n=len(str1)
+    m=len(pattern)
+    if m>n:
+        return -1
+    radix=26
+    r2=27
+    mod=1e9+7
+    m2=1e9+33
+    maxm=(radix**m)%mod
+    maxm2=(r2**m)%m2
+    hash1,hash2=rabin_karp_doub.hash_creation(radix,r2,m,pattern,mod,m2) 
+    for j in range(n-m+1):
+        if j==0:
+            hash_s,hash_s2=rabin_karp_doub.hash_creation(radix,r2,m,str1[j:j+m],mod,m2)
+        else:
+            hash_new1=((radix*hash_s)-((ord(str1[j-1])-ord('a'))*maxm)+(ord(str1[j+m-1])-ord('a')))%mod
+            neww2=((r2*hash_s2)-((ord(str1[j-1])-ord('a'))*maxm2)+(ord(str1[j+m-1])-ord('a')))%m2 
+            hash_s=hash_new1
+            hash_s2=neww2 
+        if hash_s==hash1 and hash_s2==hash2:
+            return str1[j:j+m]
+        
+    return False
+str1='abcdefhhshdii'
+pattern='shdi'
+print(f_double_hash(str1,pattern))
