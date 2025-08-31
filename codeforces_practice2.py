@@ -272,3 +272,37 @@ Input: [
 #         def fn(idx,mask): 
 #             if idx>=len(grid): 
 #                 return 
+# Rabin Karp algo
+class rabin_karp:
+    def hash_creation(radix,m,str1,mod):
+        hashh=0
+        factor=1
+        for i in range(m-1,-1,-1):
+            hashh+=((ord(str1[i])-ord('a'))*factor)%mod
+            factor*=radix
+        return hashh%mod 
+def f(str1,pattern):
+    n=len(str1)
+    m=len(pattern)
+    if m>n:
+        return -1
+    radix=26
+    mod=1e9+7
+    maxm=(radix**m)%mod
+    hash_pattern=rabin_karp.hash_creation(radix,m,pattern,mod) 
+    for j in range(n-m+1):
+        if j==0:
+            hash_s=rabin_karp.hash_creation(radix,m,str1[j:j+m],mod)
+        else:
+            hash_new=((radix*hash_s)-((ord(str1[j-1])-ord('a'))*maxm)+(ord(str1[j+m-1])-ord('a')))%mod
+            hash_s=hash_new
+        if hash_s==hash_pattern:
+            return str1[j:j+m]
+        
+    return False
+
+str1='abcdefhhshdii'
+pattern='fhhs'
+print(f(str1,pattern))
+
+    
