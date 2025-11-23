@@ -346,3 +346,39 @@ def f_double_hash(str1,pattern):
 str1='abcdefhhshdii'
 pattern='shdi'
 print(f_double_hash(str1,pattern))
+
+
+
+
+# Segment Tree for range queries
+class SegmentTree:
+    def __init__(self,size,arr):
+        self.stree=[0]*(4*size)
+        self.buildtree(arr,0,size-1,0)
+    def buildtree(self,arr,l,r,idx):
+        if l==r:
+            self.stree[idx]=arr[l]
+            return
+        mid=(l+r)//2
+        self.buildtree(arr,l,mid,2*idx+1)
+        self.buildtree(arr,mid+1,r,2*idx+2)
+        self.stree[idx]=self.stree[2*idx+1]+self.stree[2*idx+2]
+    def update(self,idx,sidx,l,r,val):
+        if l==r:
+            self.stree[sidx]=val
+            return
+        mid=(l+r)//2
+        if idx<=mid:
+            # go left
+            self.update(idx,2*sidx+1,l,mid,val)
+        else:
+            self.update(idx,2*sidx+2,mid+1,r,val)
+        self.stree[sidx]=self.stree[2*sidx+1]+self.stree[2*sidx+2]
+    def query(self,s,e,l,r,idx):
+        if l>=s and r<=e:
+            return self.stree[idx]
+        if l>e or r<s:
+            return 0
+        mid=(l+r)//2
+        return self.query(s,e,l,mid,2*idx+1)+self.query(s,e,mid+1,r,2*idx+2)
+    
