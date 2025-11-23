@@ -70,7 +70,7 @@
 #     dp=[[[-1 for _ in range(n)]for _ in range(n)]for _ in range(n)]
 #     def f(idx,p1,p2):
 #         if idx>=n:
-#             return 0
+#             return 0 
 #         if dp[idx][p1][p2]!=-1:
 #             return dp[idx][p1][p2]
 #         if p1==-1:
